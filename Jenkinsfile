@@ -11,7 +11,7 @@ pipeline {
         timestamps()
     }
     triggers {
-        cron '5 11 * * *'
+        cron '7 11 * * *'
     }
     stages {
         stage('Make executable') {
