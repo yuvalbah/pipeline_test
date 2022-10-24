@@ -1,16 +1,44 @@
 pipeline {
     agent any
 
+properties([
+  parameters([
+    [
+      $class: 'ChoiceParameter',
+      choiceType: 'PT_SINGLE_SELECT',
+      name: 'Environment',
+      script: [
+        $class: 'ScriptlerScript',
+        scriptlerScriptId:'Environments.groovy'
+      ]
+    ],
+    [
+      $class: 'CascadeChoiceParameter',
+      choiceType: 'PT_SINGLE_SELECT',
+      name: 'Host',
+      referencedParameters: 'Environment',
+      script: [
+        $class: 'ScriptlerScript',
+        scriptlerScriptId:'HostsInEnv.groovy',
+        parameters: [
+          [name:'Environment', value: '$Environment']
+        ]
+      ]
+   ]
+ ])
+])
+
+    
 parameters {
         string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation")
-        activeChoiceParam('CLOUD_PROVIDER') {
-              description('select cloud provider')
-              choiceType('SINGLE_SELECT')
-              groovyScript {
-                  script("return['AWS','GCP','Azure']")
-                  fallbackScript('return ["ERR"]')
-              }
-          }
+//         activeChoiceParam('CLOUD_PROVIDER') {
+//               description('select cloud provider')
+//               choiceType('SINGLE_SELECT')
+//               groovyScript {
+//                   script("return['AWS','GCP','Azure']")
+//                   fallbackScript('return ["ERR"]')
+//               }
+//           }
 //           activeChoiceReactiveParam('MODEL') {
 //               description('select model')
 //               choiceType('RADIO')
