@@ -5,7 +5,7 @@ properties(
                 parameterDefinitions: [
                         [
                                 $class     : 'ChoiceParameterDefinition',
-                                choices    : 'AWS\GCP\nAzure',
+                                choices    : 'AWS\nGCP\nAzure',
                                 description: 'select cloud provider',
                                 name       : 'CLOUD_PROVIDER'
                         ]
