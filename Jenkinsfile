@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-properties([
+options([
   parameters([
     [
       $class: 'ChoiceParameter',
