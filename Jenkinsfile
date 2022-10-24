@@ -97,7 +97,7 @@ parameters {
         timestamps()
     }
     triggers {
-//        cron '7 11 * * *'
+        cron '7 11 * * *'
     }
     stages {
         stage('Greet') {
