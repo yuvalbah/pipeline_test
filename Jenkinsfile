@@ -1,18 +1,3 @@
-properties(
-[
-        [
-                $class              : 'ParametersDefinitionProperty',
-                parameterDefinitions: [
-                        [
-                                $class     : 'ChoiceParameterDefinition',
-                                choices    : 'AWS\nGCP\nAzure',
-                                description: 'select cloud provider',
-                                name       : 'CLOUD_PROVIDER'
-                        ]
-                    ]
-            ]
-    ])
-
 pipeline {
     agent any
 
@@ -20,7 +5,7 @@ parameters {
         string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation")
         activeChoiceParam('CLOUD_PROVIDER') {
               description('select cloud provider')
-              choiceType('RADIO')
+              choiceType('SINGLE_SELECT')
               groovyScript {
                   script("return['AWS','GCP','Azure']")
                   fallbackScript('return ["ERR"]')
