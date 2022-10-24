@@ -1,5 +1,21 @@
+properties(
+[
+        [
+                $class              : 'ParametersDefinitionProperty',
+                parameterDefinitions: [
+                        [
+                                $class     : 'ChoiceParameterDefinition',
+                                choices    : 'AWS\GCP\nAzure',
+                                description: 'select cloud provider',
+                                name       : 'CLOUD_PROVIDER'
+                        ]
+                    ]
+            ]
+    ])
+
 pipeline {
     agent any
+
 parameters {
         string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation")
         activeChoiceParam('CLOUD_PROVIDER') {
@@ -10,24 +26,24 @@ parameters {
                   fallbackScript('return ["ERR"]')
               }
           }
-          activeChoiceReactiveParam('MODEL') {
-              description('select model')
-              choiceType('RADIO')
-              groovyScript {
-                  script("if(CLOUD_PROVIDER.equals("AWS")) {return ['Cloud', 'AV2500', 'AV1000']} else if  (CLOUD_PROVIDER.equals("GCP")) {return ['Cloud', 'GV2500', 'GV1000']} else if (CLOUD_PROVIDER.equals("Azure")) {return ['Cloud', 'MV2500', 'MV1000']} else {return []}")
-                  fallbackScript('return ["ERR"]')
-              }
-              referencedParameter('CLOUD_PROVIDER')
-          }
-          activeChoiceReactiveParam('INSTANCE_TYPE') {
-              description('select instance type')
-              choiceType('RADIO')
-              groovyScript {
-                  script("if(CLOUD_PROVIDER.equals("AWS")) {return ['C5.xlarge', 'C5.2xlarge', 'C5.9xlarge']} else if  (CLOUD_PROVIDER.equals("GCP")) {return ['G1','G2']} else if  (CLOUD_PROVIDER.equals("Azure")) {return ['A1','A2']} else {return []}")
-                  fallbackScript('return ["ERR"]')
-              }
-              referencedParameter('CLOUD_PROVIDER')
-          }
+//           activeChoiceReactiveParam('MODEL') {
+//               description('select model')
+//               choiceType('RADIO')
+//               groovyScript {
+//                   script("if(CLOUD_PROVIDER.equals("AWS")) {return ['Cloud', 'AV2500', 'AV1000']} else if  (CLOUD_PROVIDER.equals("GCP")) {return ['Cloud', 'GV2500', 'GV1000']} else if (CLOUD_PROVIDER.equals("Azure")) {return ['Cloud', 'MV2500', 'MV1000']} else {return []}")
+//                   fallbackScript('return ["ERR"]')
+//               }
+//               referencedParameter('CLOUD_PROVIDER')
+//           }
+//           activeChoiceReactiveParam('INSTANCE_TYPE') {
+//               description('select instance type')
+//               choiceType('RADIO')
+//               groovyScript {
+//                   script("if(CLOUD_PROVIDER.equals("AWS")) {return ['C5.xlarge', 'C5.2xlarge', 'C5.9xlarge']} else if  (CLOUD_PROVIDER.equals("GCP")) {return ['G1','G2']} else if  (CLOUD_PROVIDER.equals("Azure")) {return ['A1','A2']} else {return []}")
+//                   fallbackScript('return ["ERR"]')
+//               }
+//               referencedParameter('CLOUD_PROVIDER')
+//           }
 //         extendedChoice(name: 'CLOUD_PROVIDER',
 //                 description: 'Leave unselected to run for all providers',
 //                 multiSelectDelimiter: ',',
