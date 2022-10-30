@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
 // Define variables
 List category_list = "Vegetables\nFruits"
-List fruits_list = ["apple\nbanana\nmango"
-List vegetables_list = ["potato\ntomato\nbroccoli"
+List fruits_list = "apple\nbanana\nmango"
+List vegetables_list = "potato\ntomato\nbroccoli"
 List default_item = "Not Applicable"
 String categories = buildScript(category_list)
 String vegetables = buildScript(vegetables_list)
