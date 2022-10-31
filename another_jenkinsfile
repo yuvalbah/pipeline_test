@@ -1,23 +1,28 @@
 #!/usr/bin/env groovy
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\""]
-List gcp_model_list = ["\"Select:selected\"","\"G1\"","\"G2\"","\"G3\""]
-List aws_model_list = ["\"Select:selected\"","\"A1\"","\"A2\"","\"A3\""]
+List azure_model_list = ["\"Select:selected\"","\"MM1\"","\"MM2\"","\"MM3\""]
+List gcp_model_list = ["\"Select:selected\"","\"GM1\"","\"GM2\"","\"GM3\""]
+List aws_model_list = ["\"Select:selected\"","\"AM1\"","\"AM2\"","\"AM3\""]
+List azure_instance_list = ["\"Select:selected\"","\"MI1\"","\"MI2\"","\"MI3\""]
+List gcp_instance_list = ["\"Select:selected\"","\"GI1\"","\"GI2\"","\"GI3\""]
+List aws_instance_list = ["\"Select:selected\"","\"AI1\"","\"AI2\"","\"AI3\""]
 List default_item = ["\"Not Applicable\""]
 String providers = buildScript(provider_list)
 String aws_model = buildScript(aws_model_list)
 String gcp_model = buildScript(gcp_model_list)
 String models = populateItems(default_item,aws_model_list,gcp_model_list)
+String instances = populateItems(default_item,aws_instance_list,gcp_instance_list)
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
   return "return $values"
 }
-String populateItems(List default_item, List vegetablesList, List fruitsList){
+String populateItems(List default_item, List awsList, List gcpList){
 return """if(Provider.equals('aws')){
-     return $vegetablesList
+     return $awsList
      }
      else if(Provider.equals('gcp')){
-     return $fruitsList
+     return $gcpList
      }else{
      return $default_item
      }
@@ -29,7 +34,8 @@ properties([
     parameters([
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false,
         script:  providers]]],
-[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]]
+[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
+[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]]
     ])
 ])
 pipeline {
