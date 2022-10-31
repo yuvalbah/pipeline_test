@@ -69,7 +69,7 @@ pipeline {
 //                 type: 'PT_MULTI_SELECT',
 //                 value: 'http_perf, http2_perf,waap_perf,mxha_perf',
 //                 visibleItemCount: 10)
-//         booleanParam(name: "DELETE_ENV", defaultValue: true)
+        booleanParam(name: "DELETE_ENV", defaultValue: true)
 //         booleanParam(name: "DEPLOY_ENV", defaultValue: true)
 //         booleanParam(name: "CLOUD_FORMATION", defaultValue: true, description: "All AWS deployments will be done via CTT and CloudFormation.")
 //         booleanParam(name: 'HTTP2_ENABLED', defaultValue: true)
