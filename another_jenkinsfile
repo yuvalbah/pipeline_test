@@ -36,17 +36,27 @@ return """if(Provider.equals('aws')){
 // Declarative Scripting
 properties([
     parameters([
+        [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation'],
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  providers]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]],
-        [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation']
+        [$class: 'StringParameterDefinition', name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
+        [$class: 'StringParameterDefinition', name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
+        [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
+        [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
+        [$class: 'StringParameterDefinition', name: 'BUILD', defaultValue: '14.7.0.10_latest', description: 'Build for auto deploy. Specify "latest" after underscore to automatically get the latest one.'],
+        [$class: 'BooleanParameterDefinition', name: "DELETE_ENV", defaultValue: true],
+        [$class: 'BooleanParameterDefinition', name: "DEPLOY_ENV", defaultValue: true],
+        [$class: 'BooleanParameterDefinition', name: "CLOUD_FORMATION", defaultValue: true, description: "All AWS deployments will be done via CTT and CloudFormation."],
+        [$class: 'BooleanParameterDefinition', name: "HTTP2_ENABLED", defaultValue: true],
+        [$class: 'BooleanParameterDefinition', name: "ENABLE_TESTRAIL_INTEGRATION", defaultValue: false],
+        [$class: 'StringParameterDefinition', name: 'TEST_PLAN_ID', defaultValue: "", description: "Specify to have results published into particular Test Plan in TestRail"],
     ])
 ])
 pipeline {
     agent any
   parameters {
         
-//       string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation")
 //         extendedChoice(name: 'SETUP_SELECTION',
 //                 description: 'Setups to run tests against',
 //                 multiSelectDelimiter: ',',
@@ -56,11 +66,6 @@ pipeline {
 //                 value: 'mx_gw_byol,mxha_gw_byol',
 //                 defaultValue: "mx_gw_byol",
 //                 visibleItemCount: 3)
-//         string(name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
-//         string(name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
-//         string(name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env")
-//         string(name: 'BUILD', defaultValue: '14.7.0.10_latest',
-//                 description: 'Build for auto deploy. Specify "latest" after underscore to automatically get the latest one.')
 //         extendedChoice(name: 'TESTS_TO_RUN',
 //                 description: 'Select test suites to run. Leave unselected to run all the tests',
 //                 multiSelectDelimiter: ' or ',
@@ -69,12 +74,6 @@ pipeline {
 //                 type: 'PT_MULTI_SELECT',
 //                 value: 'http_perf, http2_perf,waap_perf,mxha_perf',
 //                 visibleItemCount: 10)
-        booleanParam(name: "DELETE_ENV", defaultValue: true)
-//         booleanParam(name: "DEPLOY_ENV", defaultValue: true)
-//         booleanParam(name: "CLOUD_FORMATION", defaultValue: true, description: "All AWS deployments will be done via CTT and CloudFormation.")
-//         booleanParam(name: 'HTTP2_ENABLED', defaultValue: true)
-//         booleanParam(name: 'ENABLE_TESTRAIL_INTEGRATION', defaultValue: false)
-//         string(name: 'TEST_PLAN_ID', defaultValue: '', description: 'Specify to have results published into particular Test Plan in TestRail')
   }
 stages {
    stage('Build'){
