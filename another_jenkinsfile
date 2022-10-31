@@ -23,13 +23,13 @@ String buildScript(List values){
   return "return $values"
 }
 String populateItems(List default_item, List awsList, List gcpList, List azureList){
-return """if(Categories.equals('aws')){
+return """if(providers.equals('aws')){
      return $awsList
      }
-     else if(Categories.equals('gcp')){
+     else if(providers.equals('gcp')){
      return $gcpList
      }
-     else if(Categories.equals('acure')){
+     else if(providers.equals('azure')){
      return $azureList
      }else{
      return $default_item
