@@ -11,18 +11,22 @@ List default_item = ["\"Not Applicable\""]
 String providers = buildScript(provider_list)
 String aws_model = buildScript(aws_model_list)
 String gcp_model = buildScript(gcp_model_list)
-String models = populateItems(default_item,aws_model_list,gcp_model_list)
-String instances = populateItems(default_item,aws_instance_list,gcp_instance_list)
+String azure_model = buildScript(azure_model_list)
+String models = populateItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
+String instances = populateItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
   return "return $values"
 }
-String populateItems(List default_item, List awsList, List gcpList){
+String populateItems(List default_item, List awsList, List gcpList, List azureList){
 return """if(Provider.equals('aws')){
      return $awsList
      }
      else if(Provider.equals('gcp')){
      return $gcpList
+     }
+     else if(Provider.equals('azure')){
+     return $azureList
      }else{
      return $default_item
      }
