@@ -7,7 +7,7 @@ List default_item = ["\"Not Applicable\""]
 String providers = buildScript(provider_list)
 String aws_model = buildScript(aws_model_list)
 String gcp_model = buildScript(gcp_model_list)
-String models = populateItems(default_item,aws_models_list,gcp_models_list)
+String models = populateItems(default_item,aws_model_list,gcp_model_list)
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
   return "return $values"
