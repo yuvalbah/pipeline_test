@@ -1,36 +1,23 @@
 #!/usr/bin/env groovy
 // Define variables
-List provider_list = ["\"aws\"","\"gcp\"","\"azure\""]
-List aws_instances_list = ["\"C5.xlarge\"","\"C5.2xlarge\"","\"C5.9xlarge\""]
-List aws_models_list = ["\"cloud\"","\"AV2500\"","\"AV1000\""]
-List gcp_instances_list = ["\"G1\"","\"G2\"","\"G3\""]
-List gcp_models_list = ["\"cloud\"","\"GV2500\"","\"GV1000\""]
-List azure_instances_list = ["\"M1\"","\"M2\"","\"M3\""]
-List azure_models_list = ["\"cloud\"","\"MV2500\"","\"MV1000\""]
+List category_list = ["\"Select:selected\"","\"Vegetables\"","\"Fruits\""]
+List fruits_list = ["\"Select:selected\"","\"apple\"","\"banana\"","\"mango\""]
+List vegetables_list = ["\"Select:selected\"","\"potato\"","\"tomato\"","\"broccoli\""]
 List default_item = ["\"Not Applicable\""]
-String providers = buildScript(provider_list)
-String aws_instances = buildScript(aws_instances_list)
-String gcp_instances = buildScript(gcp_instances_list)
-String azure_instances = buildScript(azure_instances_list)
-String aws_models = buildScript(aws_models_list)
-String gcp_models = buildScript(gcp_models_list)
-String azure_models = buildScript(azure_models_list)
-
-String models = populateItems(default_item,aws_models,gcp_models,azure_models)
-String instances = populateItems(default_item,aws_instances,gcp_instances,azure_instances)
+String categories = buildScript(category_list)
+String vegetables = buildScript(vegetables_list)
+String fruits = buildScript(fruits_list)
+String items = populateItems(default_item,vegetables_list,fruits_list)
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
   return "return $values"
 }
-String populateItems(List default_item, List awsList, List gcpList, List azureList){
-return """if(providers.equals('aws')){
-     return $awsList
+String populateItems(List default_item, List vegetablesList, List fruitsList){
+return """if(Categories.equals('Vegetables')){
+     return $vegetablesList
      }
-     else if(providers.equals('gcp')){
-     return $gcpList
-     }
-     else if(providers.equals('azure')){
-     return $azureList
+     else if(Categories.equals('Fruits')){
+     return $fruitsList
      }else{
      return $default_item
      }
@@ -40,10 +27,9 @@ return """if(providers.equals('aws')){
 // Declarative Scripting
 properties([
     parameters([
-        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Providers', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false,
-        script:  providers]]],
-[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Models', referencedParameters: 'Providers', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
-[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instances', referencedParameters: 'Providers', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]]
+        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false,
+        script:  categories]]],
+[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Items', referencedParameters: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: items]]]
     ])
 ])
 pipeline {
