@@ -39,7 +39,7 @@ properties([
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  providers]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]],
-        [$class: 'String', name: 'BUILD_NAME', defaultValue: "Cloud performance automation']
+        [$class: 'String', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation']
     ])
 ])
 pipeline {
