@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 // Define variables
-List provider_list = ["\"Select\"","\"aws:selected\"","\"gcp\"","\"azure\""]
+List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
 List azure_model_list = ["\"Select:selected\"","\"MM1\"","\"MM2\"","\"MM3\""]
 List gcp_model_list = ["\"Select:selected\"","\"GM1\"","\"GM2\"","\"GM3\""]
 List aws_model_list = ["\"Select:selected\"","\"AM1\"","\"AM2\"","\"AM3\""]
@@ -39,7 +39,7 @@ properties([
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  providers]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]],
-        [$class: 'StringParameterValue', name: 'BUILD_NAME', value: 'Cloud performance automation']
+        [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation']
     ])
 ])
 pipeline {
