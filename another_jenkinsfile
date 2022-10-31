@@ -55,8 +55,7 @@ properties([
 ])
 pipeline {
     agent any
-  parameters {
-        
+  
 //         extendedChoice(name: 'SETUP_SELECTION',
 //                 description: 'Setups to run tests against',
 //                 multiSelectDelimiter: ',',
@@ -74,7 +73,7 @@ pipeline {
 //                 type: 'PT_MULTI_SELECT',
 //                 value: 'http_perf, http2_perf,waap_perf,mxha_perf',
 //                 visibleItemCount: 10)
-  }
+
 stages {
    stage('Build'){
     steps {
