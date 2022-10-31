@@ -39,7 +39,7 @@ properties([
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  providers]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]],
-      string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation"),
+        [string(name: 'BUILD_NAME', defaultValue: "Cloud performance automation")],
         extendedChoice(name: 'SETUP_SELECTION',
                 description: 'Setups to run tests against',
                 multiSelectDelimiter: ',',
