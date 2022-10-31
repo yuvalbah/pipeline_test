@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 // Define variables
-List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\""]
+List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
 List azure_model_list = ["\"Select:selected\"","\"MM1\"","\"MM2\"","\"MM3\""]
 List gcp_model_list = ["\"Select:selected\"","\"GM1\"","\"GM2\"","\"GM3\""]
 List aws_model_list = ["\"Select:selected\"","\"AM1\"","\"AM2\"","\"AM3\""]
