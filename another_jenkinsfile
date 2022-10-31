@@ -84,7 +84,6 @@ properties([
         [$class: 'StringParameterDefinition', name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
-        [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', 
          name: 'BUILD', 
          defaultValue: '14.7.0.10_latest', 
@@ -106,11 +105,26 @@ properties([
 pipeline {
     agent any
 stages {
-   stage('Build'){
+   stage('Echo selection'){
     steps {
-        echo 'Building..' + params.BUILD_NAME
-        echo 'delete after completion..' + params.DELETE_ENV
-        echo 'provider..' + params.Provider
+        echo 'Build name\t' + params.BUILD_NAME
+        echo 'Build version\t' + params.BUILD
+        echo 'Provider\t' + params.Provider
+        echo 'Model\t' + params.Model
+        echo 'Instance\t' + params.Instance
+        echo 'SETUP_SELECTION\t' + params.SETUP_SELECTION
+        echo 'TESTS_TO_RUN\t' + params.TESTS_TO_RUN
+        echo 'MX_IP\t' + params.MX_IP
+        echo 'GW_IP\t' + params.GW_IP
+        echo 'Provider\t' + params.Provider
+        echo 'Provider\t' + params.Provider
+        echo 'Delete after completion\t' + params.DELETE_ENV
+        echo 'DEPLOY_ENV\t' + params.DEPLOY_ENV
+        echo 'CLOUD_FORMATION\t' + params.CLOUD_FORMATION
+        echo 'HTTP2_ENABLED\t' + params.HTTP2_ENABLED
+        echo 'ENABLE_TESTRAIL_INTEGRATION\t' + params.ENABLE_TESTRAIL_INTEGRATION
+        echo 'TEST_PLAN_ID\t' + params.TEST_PLAN_ID
+
       }
     }
    }
