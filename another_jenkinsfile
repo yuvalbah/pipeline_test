@@ -40,6 +40,9 @@ properties([
         [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  providers]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Model', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: models]]],
         [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Instance', referencedParameters: 'Provider', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: instances]]],
+        
+        [$class: 'ExtendedChoiceParameterDefinition', name: 'SETUP_SELECTION', description: 'Setups to run tests against', multiSelectDelimiter: ',', quoteValue: false, saveJSONParameterToFile: false, type: 'PT_MULTI_SELECT', value: 'mx_gw_byol,mxha_gw_byol', defaultValue: "mx_gw_byol", visibleItemCount: 3],
+           
         [$class: 'StringParameterDefinition', name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
@@ -56,15 +59,6 @@ properties([
 pipeline {
     agent any
   
-//         extendedChoice(name: 'SETUP_SELECTION',
-//                 description: 'Setups to run tests against',
-//                 multiSelectDelimiter: ',',
-//                 quoteValue: false,
-//                 saveJSONParameterToFile: false,
-//                 type: 'PT_MULTI_SELECT',
-//                 value: 'mx_gw_byol,mxha_gw_byol',
-//                 defaultValue: "mx_gw_byol",
-//                 visibleItemCount: 3)
 //         extendedChoice(name: 'TESTS_TO_RUN',
 //                 description: 'Select test suites to run. Leave unselected to run all the tests',
 //                 multiSelectDelimiter: ' or ',
