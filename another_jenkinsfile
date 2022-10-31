@@ -108,8 +108,9 @@ pipeline {
 stages {
    stage('Build'){
     steps {
-       echo 'Building..${params.BUILD_NAME}'
-       echo 'provider..${params.Provider}'
+        echo 'Building..' + params.BUILD_NAME
+        echo 'delete after completion..' + params.DELETE_ENV
+        echo 'provider..' + params.Provider
       }
     }
    }
