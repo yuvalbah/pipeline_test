@@ -6,26 +6,30 @@ SETUPS = [:]
 
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
-List azure_model_list = ["\"Select:selected\"","\"MM1\"","\"MM2\"","\"MM3\""]
-List gcp_model_list = ["\"Select:selected\"","\"GM1\"","\"GM2\"","\"GM3\""]
-List aws_model_list = ["\"Select:selected\"","\"AM1\"","\"AM2\"","\"AM3\""]
+List azure_model_list = ["\"Select:selected\"","\"cloud\"","\"MV2500\"","\"MV1000\""]
+List gcp_model_list = ["\"Select:selected\"","\"cloud\"","\"GV2500\"","\"GV1000\""]
+List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
 List azure_instance_list = ["\"Select:selected\"","\"MI1\"","\"MI2\"","\"MI3\""]
 List gcp_instance_list = ["\"Select:selected\"","\"GI1\"","\"GI2\"","\"GI3\""]
 List aws_instance_list = ["\"Select:selected\"","\"AI1\"","\"AI2\"","\"AI3\""]
+List v1000_test_list = ["\"Select:selected\"","\"TI1\"","\"TI2\"","\"TI3\""]
+List V2500_test_list = ["\"Select:selected\"","\"TI11\"","\"TI22\"","\"TI33\""]
+List cloud_test_list = ["\"Select:selected\"","\"TI111\"","\"TI222\"","\"TI333\""]
 List default_item = ["\"Not Applicable\""]
 String providers = buildScript(provider_list)
 String aws_model = buildScript(aws_model_list)
 String gcp_model = buildScript(gcp_model_list)
 String azure_model = buildScript(azure_model_list)
-String models = populateItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
-String instances = populateItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
+String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
+String instances = populateProviderNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
+String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
 
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
     return "return $values"
 }
 
-String populateItems(List default_item, List awsList, List gcpList, List azureList){
+String populateProviderNestedItems(List default_item, List awsList, List gcpList, List azureList){
     return """if(Provider.equals('aws')){
      return $awsList
      }
@@ -34,6 +38,21 @@ String populateItems(List default_item, List awsList, List gcpList, List azureLi
      }
      else if(Provider.equals('azure')){
      return $azureList
+     }else{
+     return $default_item
+     }
+     """
+}
+
+String populateModelNestedItems(List default_item, List cloudList, List v2500List, List v1000List){
+    return """if(Model.contains('cloud')){
+     return $cloudList
+     }
+     else if(Model.contains('2500')){
+     return $v2500List
+     }
+     else if(Model.contains('1000')){
+     return $v1000List
      }else{
      return $default_item
      }
@@ -81,6 +100,16 @@ properties([
                                    sandbox: false,
                                    script: 'return ["error"]'],
                   script: [classpath: [], sandbox: false, script: instances]]],
+        [$class: 'CascadeChoiceParameter',
+         choiceType: 'PT_MULTI_SELECT',
+         name: 'TESTS_TO_RUN', description: 'Select test suites to run. Leave unselected to run all the tests',
+         referencedParameters: 'Model',
+         multiSelectDelimiter: ' or ',
+         script: [$class: 'GroovyScript',
+                  fallbackScript: [classpath: [],
+                                   sandbox: false,
+                                   script: 'return ["error"]'],
+                  script: [classpath: [], sandbox: false, script: tests]]],
         [$class: 'ExtendedChoiceParameterDefinition',
          name: 'SETUP_SELECTION',
          description: 'Setups to run tests against',
@@ -91,14 +120,6 @@ properties([
          value: 'mx_gw_byol,mxha_gw_byol',
          defaultValue: "mx_gw_byol",
          visibleItemCount: 3],
-        [$class: 'ExtendedChoiceParameterDefinition',
-         name: 'TESTS_TO_RUN', description: 'Select test suites to run. Leave unselected to run all the tests',
-         multiSelectDelimiter: ' or ',
-         quoteValue: false,
-         saveJSONParameterToFile: false,
-         type: 'PT_MULTI_SELECT',
-         value: 'http_perf, http2_perf,waap_perf,mxha_perf',
-         visibleItemCount: 10],
         [$class: 'StringParameterDefinition', name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env"],
         [$class: 'StringParameterDefinition', name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env"],
