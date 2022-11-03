@@ -6,20 +6,28 @@ SETUPS = [:]
 
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
-List azure_model_list = ["\"Select:selected\"","\"cloud\"","\"MV2500\"","\"MV1000\""]
-List gcp_model_list = ["\"Select:selected\"","\"cloud\"","\"GV2500\"","\"GV1000\""]
+
 List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
+List aws_instance_list = ["\"Select:selected\"",
+                          "\"c5.xlarge\"","\"c5.2xlarge\"","\"c5.4xlarge\"","\"c5.9xlarge\"",
+                          "\"c5a.xlarge\"","\"c5a.2xlarge\"","\"c5a.4xlarge\"","\"c5a.9xlarge\""]
+
+List gcp_model_list = ["\"Select:selected\"","\"cloud\"","\"GV2500\"","\"GV1000\""]
+List gcp_instance_list = ["\"Select:selected\"","\"n1-standard-4\""]
+
+List azure_model_list = ["\"Select:selected\"","\"cloud\"","\"MV2500\"","\"MV1000\""]
 List azure_instance_list = ["\"Select:selected\"","\"MI1\"","\"MI2\"","\"MI3\""]
-List gcp_instance_list = ["\"Select:selected\"","\"GI1\"","\"GI2\"","\"GI3\""]
-List aws_instance_list = ["\"Select:selected\"","\"AI1\"","\"AI2\"","\"AI3\""]
-List v1000_test_list = ["\"Select:selected\"","\"TI1\"","\"TI2\"","\"TI3\""]
-List V2500_test_list = ["\"Select:selected\"","\"TI11\"","\"TI22\"","\"TI33\""]
-List cloud_test_list = ["\"Select:selected\"","\"TI111\"","\"TI222\"","\"TI333\""]
+
+List v1000_test_list = ["\"Select:selected\"","\"http_0.1G\"","\"https_0.1G\""]
+List V2500_test_list = ["\"Select:selected\"","\"http_0.5G\"","\"https_0.5G\""]
+List cloud_test_list = ["\"Select:selected\"","\"http_2G\"","\"https_1.5G\""]
+
 List default_item = ["\"Not Applicable\""]
+
 String providers = buildScript(provider_list)
-String aws_model = buildScript(aws_model_list)
-String gcp_model = buildScript(gcp_model_list)
-String azure_model = buildScript(azure_model_list)
+// String aws_model = buildScript(aws_model_list)
+// String gcp_model = buildScript(gcp_model_list)
+// String azure_model = buildScript(azure_model_list)
 String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
 String instances = populateProviderNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
