@@ -5,20 +5,20 @@ SETUPS = [:]
 // ========================================= Classes and methods declaration =====================================
 
 // Define variables
-List provider_list = ["\"Select\"","\"aws:selected\"","\"gcp\"","\"azure\""]
-List build_version_list = ["\"Select:selected\"","\"14 or earlier\"","\"15 and above\""]
-List gw_mode_list = ["\"Select\"","\"ngrp:selected\"","\"grpc\""]
+List provider_list = ["\"aws:selected\"","\"gcp\"","\"azure\""]
+List build_version_list = ["\"14 or earlier:selected\"","\"15 and above\""]
+List gw_mode_list = ["\"ngrp:selected\"","\"grpc\""]
 List service_mesh_list = ["\"istio\"","\"nginx\""]
 
-List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
+List aws_model_list = ["\"cloud\"","\"AV2500:selected\"","\"AV1000\""]
 List aws_instance_list = ["\"Select:selected\"",
                           "\"c5.xlarge\"","\"c5.2xlarge\"","\"c5.4xlarge\"","\"c5.9xlarge\"",
                           "\"c5a.xlarge\"","\"c5a.2xlarge\"","\"c5a.4xlarge\"","\"c5a.9xlarge\""]
 
-List gcp_model_list = ["\"Select:selected\"","\"cloud\"","\"GV2500\"","\"GV1000\""]
+List gcp_model_list = ["\"cloud\"","\"GV2500:selected\"","\"GV1000\""]
 List gcp_instance_list = ["\"Select:selected\"","\"n1-standard-4\""]
 
-List azure_model_list = ["\"Select:selected\"","\"cloud\"","\"MV2500\"","\"MV1000\""]
+List azure_model_list = ["\"cloud\"","\"MV2500:selected\"","\"MV1000\""]
 List azure_instance_list = ["\"Select:selected\"","\"MI1\"","\"MI2\"","\"MI3\""]
 
 List v1000_test_list = ["\"http_0.1G\"","\"https_0.1G\""]
@@ -196,7 +196,7 @@ properties([
          name: "CLOUD_FORMATION",
          defaultValue: true,
          description: "All AWS deployments will be done via CTT and CloudFormation."],
-        [$class: 'BooleanParameterDefinition', name: "support_HTTP2_on_GW", defaultValue: true],
+        [$class: 'BooleanParameterDefinition', name: "Support_HTTP2_on_GW", defaultValue: true],
         [$class: 'BooleanParameterDefinition', name: "ENABLE_TESTRAIL_INTEGRATION", defaultValue: false],
         [$class: 'StringParameterDefinition',
          name: 'TEST_PLAN_ID',
