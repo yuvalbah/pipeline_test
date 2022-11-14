@@ -6,6 +6,7 @@ SETUPS = [:]
 
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
+List build_version_list = ["\"Select:selected\"","\"14 or earlier\"","\"15 and above\""]
 List gw_mode_list = ["\"Select:selected\"","\"ngrp\"","\"grpc\""]
 List service_mesh_list = ["\"istio\"","\"nginx\""]
 
@@ -28,11 +29,12 @@ List default_item = ["\"Not Applicable\""]
 
 String providers = buildScript(provider_list)
 String gw_modes = buildScript(gw_mode_list)
+String build_versions = buildScript(build_version_list)
 // String aws_model = buildScript(aws_model_list)
 // String gcp_model = buildScript(gcp_model_list)
 // String azure_model = buildScript(azure_model_list)
 String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
-String instances = populateProviderNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
+String instances = populateProviderBuildNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
 String service_mesh_providers = populateModeNestedItems(default_item,service_mesh_list)
 
@@ -57,10 +59,10 @@ String populateProviderNestedItems(List default_item, List awsList, List gcpList
 }
 
 String populateProviderBuildNestedItems(List default_item, List awsList, List gcpList, List azureList){
-    return """if(Provider.equals('aws') && BUILD_NUMBER.contains('14')){
+    return """if(Provider.equals('aws') && Build_version.contains('14')){
      return $awsList
      }
-     else if(Provider.equals('aws') && BUILD_NUMBER.contains('15')){
+     else if(Provider.equals('aws') && Build_version.contains('15')){
      return $gcpList
      }
      else if(Provider.equals('gcp')){
@@ -113,7 +115,14 @@ private Map getCloudFormationDeployments(boolean isCloudForm, String build) {
 properties([
     parameters([
         [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation'],
-        [$class: 'ExtendedChoiceParameterDefinition', name: 'BUILD_VERSION', type: 'PT_SINGLE_SELECT', value: '14.0 or earlier,15.0 and above', defaultValue: "14.0 or earlier"],
+        [$class: 'ChoiceParameter',
+         choiceType: 'PT_SINGLE_SELECT',
+         name: 'Build_version',
+         script: [$class: 'GroovyScript',
+                  fallbackScript: [classpath: [],
+                                   sandbox: false,
+                                   script: 'return ["ERROR"]'],
+                  script: [classpath: [], sandbox: false, script:  build_versions]]],
         [$class: 'ChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Provider',
@@ -151,7 +160,7 @@ properties([
         [$class: 'CascadeChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Instance',
-         referencedParameters: ["\"Provider\"","\"BUILD_VERSION\""],
+         referencedParameters: ["\"Provider\"","\"Build_version\""],
          script: [$class: 'GroovyScript',
                   fallbackScript: [classpath: [],
                                    sandbox: false,
