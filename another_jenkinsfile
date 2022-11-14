@@ -32,7 +32,7 @@ String gw_modes = buildScript(gw_mode_list)
 // String gcp_model = buildScript(gcp_model_list)
 // String azure_model = buildScript(azure_model_list)
 String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
-String instances = populateProviderBuildNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
+String instances = populateProviderNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
 String service_mesh_providers = populateModeNestedItems(default_item,service_mesh_list)
 
