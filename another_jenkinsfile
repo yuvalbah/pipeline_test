@@ -6,6 +6,8 @@ SETUPS = [:]
 
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
+List gw_mode_list = ["\"Select\"","\"ngrp:selected\"","\"grpc\""]
+List service_mesh_list = ["\"istio\"","\"nginx\""]
 
 List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
 List aws_instance_list = ["\"Select:selected\"",
@@ -25,12 +27,14 @@ List cloud_test_list = ["\"http_2G\"","\"https_1.5G\""]
 List default_item = ["\"Not Applicable\""]
 
 String providers = buildScript(provider_list)
+String gw_modes = buildScript(gw_mode_list)
 // String aws_model = buildScript(aws_model_list)
 // String gcp_model = buildScript(gcp_model_list)
 // String azure_model = buildScript(azure_model_list)
 String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
 String instances = populateProviderNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
+String service_mesh_providers = populateModeNestedItems(default_item,service_mesh_list)
 
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
@@ -67,6 +71,15 @@ String populateModelNestedItems(List default_item, List cloudList, List v2500Lis
      """
 }
 
+String populateModeNestedItems(List default_item, List grpcList){
+    return """if(Mode.contains('grpc')){
+     return $grpcList
+     }else{
+     return $default_item
+     }
+     """
+}
+
 private Map getTerraformDeployments(boolean isCouldForm) {
     Map deployments = [:]
     return deployments
@@ -82,6 +95,7 @@ private Map getCloudFormationDeployments(boolean isCloudForm, String build) {
 properties([
     parameters([
         [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation'],
+        [$class: 'ExtendedChoiceParameterDefinition', name: 'BUILD_VERSION', choiceType: 'PT_SINGLE_SELECT', value: '14.0 or earlier,15.0 and above', defaultValue: "14.0 or earlier"],
         [$class: 'ChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Provider',
@@ -90,6 +104,23 @@ properties([
                                    sandbox: false,
                                    script: 'return ["ERROR"]'],
                   script: [classpath: [], sandbox: false, script:  providers]]],
+        [$class: 'ChoiceParameter',
+         choiceType: 'PT_SINGLE_SELECT',
+         name: 'Mode',
+         script: [$class: 'GroovyScript',
+                  fallbackScript: [classpath: [],
+                                   sandbox: false,
+                                   script: 'return ["ERROR"]'],
+                  script: [classpath: [], sandbox: false, script:  gw_modes]]],
+        [$class: 'CascadeChoiceParameter',
+         choiceType: 'PT_SINGLE_SELECT',
+         name: 'Service mesh provider',
+         referencedParameters: 'Mode',
+         script: [$class: 'GroovyScript',
+                  fallbackScript: [classpath: [],
+                                   sandbox: false,
+                                   script: 'return ["error"]'],
+                  script: [classpath: [], sandbox: false, script: service_mesh_providers]]],
         [$class: 'CascadeChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Model',
@@ -141,7 +172,7 @@ properties([
          name: "CLOUD_FORMATION",
          defaultValue: true,
          description: "All AWS deployments will be done via CTT and CloudFormation."],
-        [$class: 'BooleanParameterDefinition', name: "HTTP2_ENABLED", defaultValue: true],
+        [$class: 'BooleanParameterDefinition', name: "support_HTTP2_on_GW", defaultValue: true],
         [$class: 'BooleanParameterDefinition', name: "ENABLE_TESTRAIL_INTEGRATION", defaultValue: false],
         [$class: 'StringParameterDefinition',
          name: 'TEST_PLAN_ID',
