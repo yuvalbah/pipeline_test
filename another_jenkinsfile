@@ -5,9 +5,9 @@ SETUPS = [:]
 // ========================================= Classes and methods declaration =====================================
 
 // Define variables
-List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
+List provider_list = ["\"Select\"","\"aws:selected\"","\"gcp\"","\"azure\""]
 List build_version_list = ["\"Select:selected\"","\"14 or earlier\"","\"15 and above\""]
-List gw_mode_list = ["\"Select:selected\"","\"ngrp\"","\"grpc\""]
+List gw_mode_list = ["\"Select\"","\"ngrp:selected\"","\"grpc\""]
 List service_mesh_list = ["\"istio\"","\"nginx\""]
 
 List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
@@ -30,9 +30,6 @@ List default_item = ["\"Not Applicable\""]
 String providers = buildScript(provider_list)
 String gw_modes = buildScript(gw_mode_list)
 String build_versions = buildScript(build_version_list)
-// String aws_model = buildScript(aws_model_list)
-// String gcp_model = buildScript(gcp_model_list)
-// String azure_model = buildScript(azure_model_list)
 String models = populateProviderNestedItems(default_item,aws_model_list,gcp_model_list,azure_model_list)
 String instances = populateProviderBuildNestedItems(default_item,aws_instance_list,gcp_instance_list,azure_instance_list)
 String tests = populateModelNestedItems(default_item,cloud_test_list,V2500_test_list,v1000_test_list)
