@@ -160,7 +160,7 @@ properties([
         [$class: 'CascadeChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Instance',
-         referencedParameters: ["\"Provider\"","\"Build_version\""],
+         referencedParameters: 'Provider,Build_version' ],
          script: [$class: 'GroovyScript',
                   fallbackScript: [classpath: [],
                                    sandbox: false,
