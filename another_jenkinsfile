@@ -6,7 +6,7 @@ SETUPS = [:]
 
 // Define variables
 List provider_list = ["\"Select:selected\"","\"aws\"","\"gcp\"","\"azure\""]
-List gw_mode_list = ["\"Select\"","\"ngrp:selected\"","\"grpc\""]
+List gw_mode_list = ["\"Select:selected\"","\"ngrp\"","\"grpc\""]
 List service_mesh_list = ["\"istio\"","\"nginx\""]
 
 List aws_model_list = ["\"Select:selected\"","\"cloud\"","\"AV2500\"","\"AV1000\""]
@@ -95,7 +95,7 @@ private Map getCloudFormationDeployments(boolean isCloudForm, String build) {
 properties([
     parameters([
         [$class: 'StringParameterDefinition', name: 'BUILD_NAME', defaultValue: 'Cloud performance automation'],
-        [$class: 'ExtendedChoiceParameterDefinition', name: 'BUILD_VERSION', choiceType: 'PT_SINGLE_SELECT', value: '14.0 or earlier,15.0 and above', defaultValue: "14.0 or earlier"],
+        [$class: 'ExtendedChoiceParameterDefinition', name: 'BUILD_VERSION', type: 'PT_SINGLE_SELECT', value: '14.0 or earlier,15.0 and above', defaultValue: "14.0 or earlier"],
         [$class: 'ChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'Provider',
