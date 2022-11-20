@@ -5,31 +5,27 @@ SETUPS = [:]
 // ========================================= Classes and methods declaration =====================================
 
 // Define variables
-List provider_list = "aws,gcp,azure"
-List build_version_list = "14 or earlier,15 and above"
-List gw_mode_list = "standard,grpc"
-List proxy_type_list = "envoy,nginx"
+String providers = "aws,gcp,azure"
+String build_versions = "14 or earlier,15 and above"
+String gw_modes = "standard,grpc"
+String proxy_types = "envoy,nginx"
 
-List aws_model_list = "cloud,AV2500,AV1000"
-List aws_instance_list = "c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.9xlarge"
+String aws_model_list = "cloud,AV2500,AV1000"
+String aws_instance_list = "c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.9xlarge"
 
-List gcp_model_list = "GV2500,GV1000"
-List gcp_instance_list = "n1-standard-4"
+String gcp_model_list = "GV2500,GV1000"
+String gcp_instance_list = "n1-standard-4"
 
-List azure_model_list = "MV2500,MV1000"
-List azure_instance_list = "MI1,MI2,MI3"
+String azure_model_list = "MV2500,MV1000"
+String azure_instance_list = "MI1,MI2,MI3"
 
-List v1000_test_list = "http_0.1G,https_0.1G"
-List v2500_test_list = "http_0.5G,https_0.5G"
-List cloud_test_list = "http_2G,https_1.5G"
+String v1000_test_list = "http_0.1G,https_0.1G"
+String v2500_test_list = "http_0.5G,https_0.5G"
+String cloud_test_list = "http_2G,https_1.5G"
 
-String providers = buildScript(provider_list)
-String gw_modes = buildScript(gw_mode_list)
-String build_versions = buildScript(build_version_list)
 String models = aws_model_list+ gcp_model_list+ azure_model_list
 String instances = aws_instance_list +gcp_instance_list +azure_instance_list
 String tests = cloud_test_list+ v2500_test_list+ v1000_test_list
-String proxy_types = proxy_type_list
 
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
