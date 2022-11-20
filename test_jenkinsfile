@@ -1,89 +1,62 @@
 pipeline {
     agent any
+        parameters {
+        string(name: 'BUILD_NAME', defaultValue: "Cloud Automation")
+        extendedChoice(name: 'CLOUD_PROVIDERS',
+                description: 'Leave unselected to run for all providers',
+                multiSelectDelimiter: ',',
+                type: 'PT_MULTI_SELECT',
+                value: 'AWS,GCP,Azure',
+                defaultValue: "AWS",
+                visibleItemCount: 3)
+        extendedChoice(name: 'SETUP_SELECTION',
+                description: 'Setups to run tests against',
+                multiSelectDelimiter: ',',
+                quoteValue: false,
+                saveJSONParameterToFile: false,
+                type: 'PT_MULTI_SELECT',
+                value: 'mx_gw_byol,mxha_gw_byol',
+                defaultValue: "mx_gw_byol",
+                visibleItemCount: 3)
+        choice(name: 'SG_MODE', choices: ["active", "simulation"], description: 'Server Group operation mode')
+        choice(name: 'GRPC_SG_MODE', choices: ["active", "simulation"], description: 'gRPC Server Group operation mode')
+        choice(name: 'ENVOY_DEPLOYMENT', choices: ['standalone_envoy'], description: 'Envoy deployment model for WaaP tests')
+        string(name: 'ENVOY_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
+        string(name: 'GRPC_GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
+        string(name: 'MX_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
+        string(name: 'GW_IP', defaultValue: "10.188.0.0", description: "Specify if you want to run tests on already deployed env")
+        string(name: 'LB_DNS_NAME', defaultValue: "", description: "Specify if you want to run tests on already deployed env")
+        string(name: 'BUILD', defaultValue: '14.7.0.20_latest',
+                description: 'Build for auto deploy. Specify "latest" after underscore to automatically get the latest one.')
+        extendedChoice(name: 'TESTS_TO_RUN',
+                description: 'Select test suites to run. Leave unselected to run all the tests',
+                multiSelectDelimiter: ' or ',
+                quoteValue: false,
+                saveJSONParameterToFile: false,
+                type: 'PT_MULTI_SELECT',
+                value: 'smoke,dictionaries,sni,ssl_reuse,error_page,ldr,ctd,ssl_ciphers,' +
+                        'json_normalize,websocket,smuggling_attack,form_data,xml_normalize,adc,utf_8,' +
+                        'sql_xss_injections,tls_signature_algorithms,tls_certificate_authorities,tls_settings,' +
+                        'client_hello,multipart,http2,crl,validate_server_cert,aut,waap,mxha,following_actions',
+                visibleItemCount: 10)
+        choice(name: 'LOG_LEVEL', choices: ['INFO', 'DEBUG'], description: '')
+        booleanParam(name: 'NIGHTLY_RUN', defaultValue: false)
+        booleanParam(name: "DELETE_ENV", defaultValue: true)
+        booleanParam(name: "DEPLOY_ENV", defaultValue: true)
+        booleanParam(name: "CLOUD_FORMATION", defaultValue: true, description: "All AWS deployments will be done via CTT and CloudFormation.")
+        booleanParam(name: 'HTTP2_ENABLED', defaultValue: true)
+        booleanParam(name: 'ENABLE_TESTRAIL_INTEGRATION', defaultValue: false)
+        string(name: 'TEST_PLAN_ID', defaultValue: '', description: 'Specify to have results published into particular Test Plan in TestRail')
+    }
         stages {
-            stage('Parameters'){
-                steps {
-                    script {
-                    properties([
-                            parameters([
-                                [$class: 'ChoiceParameter', 
-                                    choiceType: 'PT_SINGLE_SELECT', 
-                                    description: 'Select the Environemnt from the Dropdown List', 
-                                    filterLength: 1, 
-                                    filterable: false, 
-                                    name: 'Env', 
-                                    script: [
-                                        $class: 'GroovyScript', 
-                                        fallbackScript: [
-                                            classpath: [], 
-                                            sandbox: false, 
-                                            script: 
-                                                "return['Could not get The environemnts']"
-                                        ], 
-                                        script: [
-                                            classpath: [], 
-                                            sandbox: false, 
-                                            script: 
-                                                "return['dev','stage','prod']"
-                                        ]
-                                    ]
-                                ],
-                                [$class: 'CascadeChoiceParameter', 
-                                    choiceType: 'PT_SINGLE_SELECT', 
-                                    description: 'Select the AMI from the Dropdown List',
-                                    name: 'AMI List', 
-                                    referencedParameters: 'Env', 
-                                    script: 
-                                        [$class: 'GroovyScript', 
-                                        fallbackScript: [
-                                                classpath: [], 
-                                                sandbox: false, 
-                                                script: "return['Could not get Environment from Env Param']"
-                                                ], 
-                                        script: [
-                                                classpath: [], 
-                                                sandbox: false, 
-                                                script: '''
-                                                if (Env.equals("dev")){
-                                                    return["ami-sd2345sd", "ami-asdf245sdf", "ami-asdf3245sd"]
-                                                }
-                                                else if(Env.equals("stage")){
-                                                    return["ami-sd34sdf", "ami-sdf345sdc", "ami-sdf34sdf"]
-                                                }
-                                                else if(Env.equals("prod")){
-                                                    return["ami-sdf34sdf", "ami-sdf34ds", "ami-sdf3sf3"]
-                                                }
-                                                '''
-                                            ] 
-                                    ]
-                                ],
-                                [$class: 'DynamicReferenceParameter', 
-                                    choiceType: 'ET_ORDERED_LIST', 
-                                    description: 'Select the  AMI based on the following infomration', 
-                                    name: 'Image Information', 
-                                    referencedParameters: 'Env', 
-                                    script: 
-                                        [$class: 'GroovyScript', 
-                                        script: 'return["Could not get AMi Information"]', 
-                                        script: [
-                                            script: '''
-                                                    if (Env.equals("dev")){
-                                                        return["ami-sd2345sd:  AMI with Java", "ami-asdf245sdf: AMI with Python", "ami-asdf3245sd: AMI with Groovy"]
-                                                    }
-                                                    else if(Env.equals("stage")){
-                                                        return["ami-sd34sdf:  AMI with Java", "ami-sdf345sdc: AMI with Python", "ami-sdf34sdf: AMI with Groovy"]
-                                                    }
-                                                    else if(Env.equals("prod")){
-                                                        return["ami-sdf34sdf:  AMI with Java", "ami-sdf34ds: AMI with Python", "ami-sdf3sf3: AMI with Groovy"]
-                                                    }
-                                                    '''
-                                                ]
-                                        ]
-                                ]
-                            ])
-                        ])
-                    }
-                }
-            }
-        }   
+   stage('Echo selection'){
+    steps {
+        echo 'Build name\t' + params.BUILD_NAME
+        echo 'BUILD_NUMBER\t' + env.BUILD_NUMBER
+        echo 'JOB_NAME\t' + env.JOB_NAME
+        echo 'JENKINS_HOME\t' + env.JENKINS_HOME
+
+      }
+    }
+    }
 }
