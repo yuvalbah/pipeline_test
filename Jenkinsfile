@@ -5,33 +5,30 @@ SETUPS = [:]
 // ========================================= Classes and methods declaration =====================================
 
 // Define variables
-List provider_list = ["\"aws\"","\"gcp\"","\"azure\""]
-List build_version_list = ["\"14 or earlier\"","\"15 and above\""]
-List gw_mode_list = ["\"standard\"","\"grpc\""]
-List proxy_type_list = ["\"envoy\"","\"nginx\""]
+List provider_list = "aws,gcp,azure"
+List build_version_list = "14 or earlier,15 and above"
+List gw_mode_list = "standard,grpc"
+List proxy_type_list = "envoy,nginx"
 
-List aws_model_list = ["\"cloud\"","\"AV2500\"","\"AV1000\""]
-List aws_instance_list = ["\"c5.xlarge\"","\"c5.2xlarge\"","\"c5.4xlarge\"","\"c5.9xlarge\"",
-                          "\"c5a.xlarge\"","\"c5a.2xlarge\"","\"c5a.4xlarge\"","\"c5a.9xlarge\""]
+List aws_model_list = "cloud,AV2500,AV1000"
+List aws_instance_list = "c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.9xlarge"
 
-List gcp_model_list = ["\"cloud\"","\"GV2500\"","\"GV1000\""]
-List gcp_instance_list = ["\"n1-standard-4\""]
+List gcp_model_list = "GV2500,GV1000"
+List gcp_instance_list = "n1-standard-4"
 
-List azure_model_list = ["\"cloud\"","\"MV2500\"","\"MV1000\""]
-List azure_instance_list = ["\"MI1\"","\"MI2\"","\"MI3\""]
+List azure_model_list = "MV2500,MV1000"
+List azure_instance_list = "MI1,MI2,MI3"
 
-List v1000_test_list = ["\"http_0.1G\"","\"https_0.1G\""]
-List v2500_test_list = ["\"http_0.5G\"","\"https_0.5G\""]
-List cloud_test_list = ["\"http_2G\"","\"https_1.5G\""]
-
-List default_item = ["\"Not Applicable\""]
+List v1000_test_list = "http_0.1G,https_0.1G"
+List v2500_test_list = "http_0.5G,https_0.5G"
+List cloud_test_list = "http_2G,https_1.5G"
 
 String providers = buildScript(provider_list)
 String gw_modes = buildScript(gw_mode_list)
 String build_versions = buildScript(build_version_list)
-String models = aws_model_list + gcp_model_list + azure_model_list
-String instances = aws_instance_list + gcp_instance_list + azure_instance_list
-String tests = cloud_test_list + v2500_test_list + v1000_test_list
+String models = [aws_model_list, gcp_model_list, azure_model_list].join(',')
+String instances = [aws_instance_list ,gcp_instance_list ,azure_instance_list].join(',')
+String tests = [cloud_test_list, v2500_test_list, v1000_test_list].join(',')
 String proxy_types = proxy_type_list
 
 // Methods to build groovy scripts to populate data
@@ -60,7 +57,7 @@ properties([
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
          name: 'Build_version',
-         value: build_versions.join(','),
+         value: build_versions,
          defaultValue: "14 or earlier"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
@@ -68,7 +65,7 @@ properties([
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
          name: 'Provider',
-         value: providers.join(','),
+         value: providers,
          defaultValue: "aws"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
@@ -76,23 +73,15 @@ properties([
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
          name: 'Mode',
-         value: gw_modes.join(','),
+         value: gw_modes,
          defaultValue: "standard"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
          quoteValue: false,
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
-         name: 'Mode',
-         value: gw_modes.join(','),
-         defaultValue: "14 or earlier"],
-        [$class: 'ExtendedChoiceParameterDefinition',
-         multiSelectDelimiter: ',',
-         quoteValue: false,
-         saveJSONParameterToFile: false,
-         type: 'PT_SINGLE_SELECT',
          name: 'Proxy',
-         value: proxy_types.join(','),
+         value: proxy_types,
          defaultValue: "envoy"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
@@ -100,7 +89,7 @@ properties([
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
          name: 'Model',
-         value: models.join(','),
+         value: models,
          defaultValue: "AV2500"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
@@ -108,7 +97,7 @@ properties([
          saveJSONParameterToFile: false,
          type: 'PT_SINGLE_SELECT',
          name: 'Instance',
-         value: instances.join(','),
+         value: instances,
          defaultValue: "c5.xlarge"],
         [$class: 'ExtendedChoiceParameterDefinition',
          multiSelectDelimiter: ',',
