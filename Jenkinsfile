@@ -23,9 +23,9 @@ String v1000_test_list = "http_0.1G,https_0.1G"
 String v2500_test_list = "http_0.5G,https_0.5G"
 String cloud_test_list = "http_2G,https_1.5G"
 
-String models = aws_model_list+ gcp_model_list+ azure_model_list
-String instances = aws_instance_list +gcp_instance_list +azure_instance_list
-String tests = cloud_test_list+ v2500_test_list+ v1000_test_list
+String instances = "c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.9xlarge,n1-standard-4,MI1,MI2,MI3"
+String models = "cloud,AV2500,AV1000,GV2500,GV1000,MV2500,MV1000"
+String tests = "http_0.5G,https_0.5G,http_0.1G,https_0.1G,http_2G,https_1.5G"
 
 // Methods to build groovy scripts to populate data
 String buildScript(List values){
