@@ -26,9 +26,9 @@ List cloud_test_list = "http_2G,https_1.5G"
 String providers = buildScript(provider_list)
 String gw_modes = buildScript(gw_mode_list)
 String build_versions = buildScript(build_version_list)
-String models = [aws_model_list, gcp_model_list, azure_model_list].join(',')
-String instances = [aws_instance_list ,gcp_instance_list ,azure_instance_list].join(',')
-String tests = [cloud_test_list, v2500_test_list, v1000_test_list].join(',')
+String models = aws_model_list+ gcp_model_list+ azure_model_list
+String instances = aws_instance_list +gcp_instance_list +azure_instance_list
+String tests = cloud_test_list+ v2500_test_list+ v1000_test_list
 String proxy_types = proxy_type_list
 
 // Methods to build groovy scripts to populate data
