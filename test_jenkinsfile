@@ -68,6 +68,7 @@ pipeline {
         always {
             script {
             echo 'gVarCode\t' + VAR_CODE
+            addShortText("some text")
             }
             }
             }
