@@ -60,6 +60,7 @@ pipeline {
             echo 'BUILD_NUMBER\t' + env.BUILD_NUMBER
             echo 'JOB_NAME\t' + env.JOB_NAME
             echo 'JENKINS_HOME\t' + env.JENKINS_HOME
+            addWarningBadge("warning")
 
       }
     }
